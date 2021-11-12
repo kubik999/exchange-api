@@ -1,0 +1,1 @@
+# wymiana-waluty-rejestracja
