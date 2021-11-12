@@ -1,7 +1,6 @@
 package org.demo.springbootThymeleaf;
 
-import org.demo.springbootThymeleaf.entity.User;
-import org.demo.springbootThymeleaf.service.UserServiceImpl;
+import org.demo.springbootThymeleaf.user.UserServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class UserServiceImplTests {
+public class AppUserServiceImplTests {
 
     @Autowired
     private UserServiceImpl userServiceImpl;

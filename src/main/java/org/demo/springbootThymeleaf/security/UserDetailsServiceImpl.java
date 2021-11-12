@@ -1,4 +1,4 @@
-package org.demo.springbootThymeleaf;
+package org.demo.springbootThymeleaf.security;
 
 import org.demo.springbootThymeleaf.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -9,28 +9,35 @@
 Hello <span th:text="${name}"/>
 <br/>
 <!--details:  <span th:text="${details}"/>-->
-stan konta zł:  <span th:text="${stanKonta.actualPln}"/>
-stan konta usd:  <span th:text="${stanKonta.actualUsd}"/>
+Stan konta PLN: <span th:text="${stanKonta.actualPln}"/>
 <br/>
-
-<!--<table>-->
-<!--    <th:block th:each="auth : ${authorities}">-->
-<!--        <tr>-->
-<!--            <td th:text="${auth}">...</td>-->
-<!--        </tr>-->
-<!--    </th:block>-->
-<!--</table>-->
+Stan konta USD: <span th:text="${stanKonta.actualUsd}"/>
+<br/>
 
 <form action="#" th:action="@{/hello/exchange}"
       th:object="${exchange}" method="post">
 
-    <label><u>toExchangePln</u>(*)</label>
-    <strong><label id="errroLabelInputName" class="errorText" th:if="${#fields.hasErrors('toExchangePln')}" th:errors="*{toExchangePln}">Name Error</label></strong>
+    <label><u>Sprzedaj złotówki: </u></label>
+    <strong><label id="errroLabelInputName" class="errorText" th:if="${#fields.hasErrors('toExchangePln')}"
+                   th:errors="*{toExchangePln}">Name Error</label></strong>
     <input id="inputName" type="text" th:field="*{toExchangePln}"
            th:classappend="${#fields.hasErrors('toExchangePln')} ? errorBorder"
            class="form-control mb-4 col-4" placeholder="Wpisz imię...">
 
-    <button id="btnTeamSave" type="submit" class="btn btn-info col-2">toExchangePln</button>
+    <button id="btnTeamSave" type="submit" class="btn btn-info col-2">rozmien</button>
+</form>
+
+<form action="#" th:action="@{/hello/exchange}"
+      th:object="${exchange}" method="post">
+
+    <label><u>Sprzedaj USD: </u></label>
+    <strong><label id="errroLabelInputName2" class="errorText" th:if="${#fields.hasErrors('toExchangePln')}"
+                   th:errors="*{toExchangePln}">Name Error</label></strong>
+    <input id="inputName2" type="text" th:field="*{toExchangeUsd}"
+           th:classappend="${#fields.hasErrors('toExchangePln')} ? errorBorder"
+           class="form-control mb-4 col-4" placeholder="Wpisz imię...">
+
+    <button id="btnTeamSave2" type="submit" class="btn btn-info col-2">rozmień</button>
 </form>
 
 

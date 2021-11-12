@@ -1,7 +1,7 @@
 package org.demo.springbootThymeleaf;
 
 import org.demo.springbootThymeleaf.controller.UserController;
-import org.demo.springbootThymeleaf.service.UserService;
+import org.demo.springbootThymeleaf.user.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest
-public class UserControllerTests {
+public class AppUserControllerTests {
 
 
     private MockMvc mockMvc;

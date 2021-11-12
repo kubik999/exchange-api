@@ -1,24 +1,23 @@
 package org.demo.springbootThymeleaf.controller;
 
 import org.demo.springbootThymeleaf.customValidation.AddUserValidator;
-import org.demo.springbootThymeleaf.entity.Exchange;
-import org.demo.springbootThymeleaf.entity.User;
-import org.demo.springbootThymeleaf.service.UserService;
+import org.demo.springbootThymeleaf.entity.BankAccount;
+import org.demo.springbootThymeleaf.user.UserServiceFacade;
+import org.demo.springbootThymeleaf.shared.Exchange;
+import org.demo.springbootThymeleaf.entity.AppUser;
+import org.demo.springbootThymeleaf.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.context.MessageSource;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
 import javax.validation.Valid;
 import java.security.Principal;
-import java.util.Collection;
 import java.util.Locale;
 
 @Controller
@@ -30,22 +29,20 @@ public class UserController {
     }
 
     private UserService userService;
-    private RestTemplate restTemplate;
+    private UserServiceFacade userServiceFacade;
 
     @Autowired
     private MessageSource messageSource;
 
-    //@Autowired
-    public UserController(UserService userService, RestTemplate restTemplate) {
+    public UserController(UserService userService, UserServiceFacade userServiceFacade) {
         this.userService = userService;
-        this.restTemplate = restTemplate;
+        this.userServiceFacade = userServiceFacade;
     }
-
 
     @GetMapping("/form")
     public String showForm(Model theModel) {
-        User theUser = new User();
-        theModel.addAttribute("user", theUser);
+        AppUser theAppUser = new AppUser();
+        theModel.addAttribute("user", theAppUser);
         return "form";
     }
 
@@ -63,26 +60,21 @@ public class UserController {
 
     @PostMapping("/hello/exchange")
     public String exchange(@ModelAttribute("exchange") Exchange exchange, BindingResult result, Model theModel, Locale locale) {
-//        model.addAttribute("name", principal.getName());
-//        //Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
-//        Object details = SecurityContextHolder.getContext().getAuthentication().getDetails();
-//        //model.addAttribute("authorities", authorities);
-//        model.addAttribute("details", details);
-//        model.addAttribute("stanKonta", 23423);
-        Object forObject = restTemplate.getForObject("http://api.nbp.pl/api/exchangerates/rates/c/usd", Object.class);
-
+        BankAccount bankAccount = userServiceFacade.exchengeMoney(exchange);
+        //theModel.addAttribute("name", principal.getName());
+        theModel.addAttribute("stanKonta", bankAccount);
         return "hello";
     }
 
     @PostMapping("/save")
-    public String addUser(@ModelAttribute @Valid User theUser, BindingResult result, Model theModel, Locale locale) {
+    public String addUser(@ModelAttribute @Valid AppUser theAppUser, BindingResult result, Model theModel, Locale locale) {
 
-        AddUserValidator.customValidateAddUser(theUser, theModel, result, locale, messageSource);
+        AddUserValidator.customValidateAddUser(theAppUser, theModel, result, locale, messageSource);
 
         if (result.hasErrors()) {
             return "form";
         } else {
-            userService.save(theUser);
+            userService.save(theAppUser);
             return "successfulAdd";
         }
 

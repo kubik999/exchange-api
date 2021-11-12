@@ -9,7 +9,7 @@ import javax.validation.constraints.*;
 import java.util.Collection;
 
 @Entity
-public class User implements UserDetails {
+public class AppUser implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,7 +38,7 @@ public class User implements UserDetails {
 
     private String password;
 
-    public User() {
+    public AppUser() {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         this.password = passwordEncoder.encode("pass");
     }
