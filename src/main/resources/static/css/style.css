@@ -1,0 +1,10 @@
+.errorBorder{
+     border: 1px red solid!important;
+ }
+
+.errorText{
+    color: red;
+}
+.okBorder{
+    border: 2px green solid!important;
+}
