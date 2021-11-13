@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet"
+          th:href="@{/css/style.css}"/>
+    <link rel="stylesheet"
+          th:href="@{/css/bootstrapCss/bootstrap.css}"/>
+    <!-- Bootstrap CSS -->
+    <!--<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"-->
+    <!--integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">-->
+    <br/>
+    <title>Formularz zgłoszeniowy</title>
+</head>
+<body>
+
+
+<div class="container">
+    <h3 th:text="${name}"></h3>
+    <h3>Twoje konto </h3>
+    <hr>
+    <br/>
+    <h4>PLN: <span th:text="${accountBalance.actualPln}"/></h4>
+    <br/>
+    <br/>
+    <h4> USD: <span th:text="${accountBalance.actualUsd}"/></h4>
+    <br/>
+    <br/>
+
+    <form action="#" th:action="@{/jpr-bank-app/exchange}"
+          th:object="${exchange}" method="post">
+
+        <h4><u>Wymień walute</u></h4>
+        <br/>
+
+        <strong><label id="errroLabelInputName" class="errorText" th:if="${#fields.hasErrors('value')}"
+                       th:errors="*{value}">Name Error</label></strong>
+
+        <label><u>Kwota</u></label>
+        <input id="inputName" type="text" th:field="*{value}"
+               th:classappend="${#fields.hasErrors('value')} ? errorBorder"
+               class="form-control mb-4 col-4" placeholder="Wpisz imię...">
+
+        <label><u>Z: </u></label>
+        <select class="form-control mb-4 col-4" th:field="*{nominalFrom}">
+            <option th:value="'PLN'" th:text="PLN"></option>
+            <option th:value="'USD'" th:text="USD"></option>
+        </select>
+
+        <label><u>NA: </u></label>
+        <select class="form-control mb-4 col-4" th:field="*{nominalTo}">
+            <option th:value="'USD'" th:text="USD"></option>
+            <option th:value="'PLN'" th:text="PLN"></option>
+        </select>
+
+        <button id="btnTeamSave" type="submit" class="btn btn-info col-2">Wymień</button>
+    </form>
+</div>
+</body>
+</html>

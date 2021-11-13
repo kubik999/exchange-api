@@ -1,0 +1,87 @@
+<!DOCTYPE HTML>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet"
+          th:href="@{/css/style.css}"/>
+    <link rel="stylesheet"
+          th:href="@{/css/bootstrapCss/bootstrap.css}"/>
+    <!-- Bootstrap CSS -->
+    <!--<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"-->
+    <!--integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">-->
+    <br/>
+    <title>Formularz zgłoszeniowy</title>
+</head>
+
+<body>
+<div class="container">
+    <h3>Formularz rejestracji</h3>
+    <hr>
+    <form action="#" th:action="@{/save}"
+          th:object="${appUser}" method="post">
+
+        <label><u>Imię</u>(pole wymagane)</label>
+        <strong><label id="errorLabelInputName" class="errorText" th:if="${#fields.hasErrors('name')}"
+                       th:errors="*{name}">Name Error</label></strong>
+        <input id="inputName" type="text" th:field="*{name}"
+               th:classappend="${#fields.hasErrors('name')} ? errorBorder"
+               class="form-control mb-4 col-4" placeholder="Wpisz imię...">
+
+
+        <label><u>Nazwisko</u>(pole wymagane)</label>
+        <strong><label class="errorText" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">lastName
+            Error</label></strong>
+        <input id="inputLastName" type="text" th:field="*{lastName}"
+               th:classappend="${#fields.hasErrors('lastName')} ? errorBorder"
+               class="form-control mb-4 col-4" placeholder="Wpisz nazwisko...">
+
+
+        <label><u>Pesel</u>(pole wymagane)</label>
+        <strong><label id="userAlreadyExist" th:text="${userAlreadyExist}" class="errorText"/></label></strong>
+        <input id="inputPesel" type="text" th:field="*{pesel}"
+               th:classappend="${#fields.hasErrors('pesel')} ? errorBorder"
+               class="form-control mb-4 col-4" placeholder="Wpisz pesel...">
+
+        <label><u>Data urodzenia</u>(pole wymagane)</label>
+        <strong><label id="underagePerson" th:text="${underagePerson}" class="errorText"/></label></strong>
+        <input id="inputBirthDate" type="date" th:valueType="java.time.LocalDate" th:field="*{birthDate}"
+               th:classappend="${#fields.hasErrors('birthDate')} ? errorBorder"
+               class="form-control mb-4 col-4" placeholder="Wpisz datę urodzenia...">
+
+
+        <label><u>Początkowy stan konta (w PLN)</u>(pole wymagane)</label>
+        <strong><label class="errorText" th:if="${#fields.hasErrors('accountBalance.actualPln')}" th:errors="*{accountBalance.actualPln}">Name Error</label></strong>
+        <input id="inputStanKonta" type="text" th:valueType="pl.app.entity.BankAccount"
+               th:field="*{accountBalance.actualPln}"
+               class="form-control mb-4 col-4" placeholder="Wpisz numer telefonu...">
+
+        <label><u>Hasło do konta</u>(pole wymagane)</label>
+        <strong><label id="errorLabelInputPassword" class="errorText" th:if="${#fields.hasErrors('password')}"
+                       th:errors="*{name}">Name Error</label></strong>
+        <input id="inputPassword" type="password" th:field="*{password}"
+               th:classappend="${#fields.hasErrors('password')} ? errorBorder"
+               class="form-control mb-4 col-4" placeholder="Wpisz swoje hasło...">
+
+
+        <button id="btnTeamSave" type="submit" class="btn btn-info col-2">Dodaj konto</button>
+    </form>
+    <hr>
+    <span>(*) - pole wymagane</span><br>
+    <span>(**) - pole wymagane opcjonalnie (Email lub Telefon musi zostać uzupełnione)</span>
+</div>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
