@@ -11,7 +11,7 @@ import java.util.Optional;
 @Service
 @Profile(AppProfile.TEST)
 public class UserAuthServiceFake implements UserAuthService {
-    public Optional<AppUser> getUser() {
+    public Optional<AppUser> getLoggedUser() {
         return Optional.of(UserFactoryTest.validUserDomain());
     };
 }

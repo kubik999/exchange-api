@@ -1,6 +1,7 @@
 package pl.app.exchange;
 
-public interface ExchangeUsdService {
-    NbpUsdV1 getUsdRate();
+import java.util.Optional;
 
+public interface ExchangeUsdService {
+    Optional<NbpUsdV1> getUsdRate();
 }

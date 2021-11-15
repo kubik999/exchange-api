@@ -2,9 +2,6 @@ package pl.app.user;
 
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
 import pl.app.entity.AppUser;
 import pl.app.entity.BankAccount;
 import pl.app.exchange.ExchangeServiceStrategy;
@@ -33,7 +30,7 @@ public class UserServiceFacade {
 
     public void exchangeLoggedUserMoney(ExchangeCommand exchangeCommand, BindingResult result, Model model) {
 
-        AppUser loggedUser = userAuthService.getUser()
+        AppUser loggedUser = userAuthService.getLoggedUser()
                 .orElseThrow(() -> new RuntimeException("Nie znaleziono użytkownika"));
 
         AppUser user = userService.findByPesel(loggedUser.getPesel()).orElseThrow(() -> new RuntimeException("Nie znaleziono użytkownika"));

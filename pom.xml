@@ -10,7 +10,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>jpr</groupId>
-    <artifactId>nationaleNederlanden</artifactId>
+    <artifactId>jprBank</artifactId>
     <packaging>war</packaging>
     <version>0.0.1-SNAPSHOT</version>
     <name>springbootThymeleaf</name>

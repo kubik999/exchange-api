@@ -2,14 +2,10 @@ package pl.app.user;
 
 import lombok.AllArgsConstructor;
 import pl.app.entity.AppUser;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Predicate;
 
 @Service
 @AllArgsConstructor

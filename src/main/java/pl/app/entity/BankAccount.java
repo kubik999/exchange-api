@@ -1,15 +1,15 @@
 package pl.app.entity;
 
 import lombok.Getter;
-import lombok.Setter;
 import pl.app.exchange.ExchangeNominal;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Map;
 
 @Entity
 @Getter
-@Setter
 public class BankAccount {
 
     @Id
@@ -25,5 +25,13 @@ public class BankAccount {
         return Map.of(ExchangeNominal.PLN, actualPln,
                 ExchangeNominal.USD, actualUsd
         );
+    }
+
+    public void setActualPln(double actualPln) {
+        this.actualPln = new BigDecimal(actualPln).setScale(2, RoundingMode.HALF_UP).doubleValue();
+    }
+
+    public void setActualUsd(double actualUsd) {
+        this.actualUsd = new BigDecimal(actualUsd).setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
 }

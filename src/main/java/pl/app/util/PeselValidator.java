@@ -1,7 +1,6 @@
 package pl.app.util;
 
 // skopiowano z http://www.algorytm.org/numery-identyfikacyjne/pesel/pesel-j.html
-
 public class PeselValidator {
 
     private byte PESEL[] = new byte[11];

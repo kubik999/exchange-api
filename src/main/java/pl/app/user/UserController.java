@@ -72,8 +72,7 @@ public class UserController {
 
     private void prepareModelForJprBankPage(Model model) {
 
-
-        Optional<AppUser> appUser = userAuthService.getUser();
+        Optional<AppUser> appUser = userAuthService.getLoggedUser();
         String name = appUser.isPresent()
                 ? appUser.get().getName()
                 : "";
@@ -86,17 +85,9 @@ public class UserController {
         model.addAttribute("exchange", new ExchangeCommand());
         model.addAttribute("actualDolarRate", new ExchangeCommand());
 
-
-        Double ask = exchangeUsdService.getUsdRate().getRates().stream()
-                .findFirst()
-                .map(obj -> (Double) obj.get("ask"))
-                .orElseThrow(() -> new RuntimeException("Nie znaleziono ceny dolara"));
-
-        Double bid = exchangeUsdService.getUsdRate().getRates().stream()
-                .findFirst()
-                .map(obj -> (Double) obj.get("bid"))
-                .orElseThrow(() -> new RuntimeException("Nie znaleziono ceny dolara"));
-
+        Optional<NbpUsdV1> nbpUsdV1 = exchangeUsdService.getUsdRate();
+        double ask = nbpUsdV1.map(NbpUsdV1::getAsk).orElse(0.0);
+        double bid = nbpUsdV1.map(NbpUsdV1::getBid).orElse(0.0);
         model.addAttribute("ask", ask);
         model.addAttribute("bid", bid);
     }

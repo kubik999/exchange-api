@@ -1,3 +1,13 @@
-Kod do materiałów:
-* [SPRING SECURITY - SIMPLE FACTOR AUTHORIZATION](https://youtu.be/FZ4fnxPPuDc)
-* [Spring Security – jak skutecznie zabezpieczać aplikacje?](https://bykowski.pl/spring-security-jak-skutecznie-zabezpieczac-aplikacje/)
+Zakladanie nowego konta:
+http://localhost:8080/register
+
+Logowanie
+http://localhost:8080/login
+
+Strona apliakcji pseud-obanku (dla zalogowanych)
+http://localhost:8080/jpr-bank-app/
+
+Testy uruchamiac z profilem: test
+Aplikacje uruchamiac z profilem: dev
+
+Profil test nie strzela do API banku i nie uwzglednia zalogowanego uzytkownika

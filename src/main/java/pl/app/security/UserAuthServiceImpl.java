@@ -19,7 +19,7 @@ public class UserAuthServiceImpl implements UserAuthService {
             && !(auth instanceof AnonymousAuthenticationToken);
 
     @Override
-    public Optional<AppUser> getUser() {
+    public Optional<AppUser> getLoggedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return isAuthenticated.test(authentication)
                 ? Optional.of((AppUser) authentication.getPrincipal())

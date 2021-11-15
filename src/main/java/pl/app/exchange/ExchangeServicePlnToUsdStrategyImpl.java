@@ -1,25 +1,20 @@
 package pl.app.exchange;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
-import org.springframework.context.annotation.Profile;
 import pl.app.entity.BankAccount;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-import pl.app.system.AppProfile;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.LinkedHashMap;
-import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @Transactional
 @AllArgsConstructor
 class ExchangeServicePlnToUsdStrategyImpl implements ExchangeServiceStrategy {
 
-       private ExchangeUsdService exchangeUsdService;
+    private ExchangeUsdService exchangeUsdService;
 
     public boolean accept(ExchangeCommand exchangeCommand) {
         return ExchangeNominal.PLN.equals(exchangeCommand.getNominalFrom())
@@ -43,12 +38,8 @@ class ExchangeServicePlnToUsdStrategyImpl implements ExchangeServiceStrategy {
 
     private double getUsdRateAsk() {
 
-        NbpUsdV1 nbpUsdV1 = exchangeUsdService.getUsdRate();
-        return Objects.nonNull(nbpUsdV1)
-                ? nbpUsdV1.getRates().stream()
-                .findFirst()
-                .map(obj -> (Double) obj.get("ask"))
-                .orElseThrow(() -> new RuntimeException("Nie znaleziono ceny dolara"))
-                : 4.0;
+        Optional<NbpUsdV1> nbpUsdV1Optional = exchangeUsdService.getUsdRate();
+        NbpUsdV1 nbpUsdV1 = nbpUsdV1Optional.orElseThrow(() -> new RuntimeException("Brak wartości ceny usd"));
+        return nbpUsdV1.getAsk();
     }
 }
