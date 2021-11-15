@@ -13,19 +13,9 @@ import java.util.function.Predicate;
 
 @Service
 @AllArgsConstructor
-public class UserServiceImpl implements UserService {
+class UserServiceImpl implements UserService {
 
-    private static final Predicate<Authentication> isAuthenticated = auth -> auth != null
-            && !(auth instanceof AnonymousAuthenticationToken);
     private UserRepository repo;
-
-    @Override
-    public Optional<AppUser> getUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return isAuthenticated.test(authentication)
-                ? Optional.of((AppUser) authentication.getPrincipal())
-                : Optional.empty();
-    }
 
     @Override
     public AppUser saveUser(AppUser user) {
@@ -45,6 +35,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<AppUser> findByPesel(String pesel) {
         return repo.findByPesel(pesel);
+    }
+
+    public void deleteAll() {
+        repo.deleteAll();
     }
 }
 

@@ -2,16 +2,19 @@ package pl.app.user;
 
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 import pl.app.entity.AppUser;
 import pl.app.entity.BankAccount;
-import pl.app.exchange.ExchangeMoneyServiceStrategy;
+import pl.app.exchange.ExchangeServiceStrategy;
 import pl.app.exchange.ExchangeMoneyValidator;
 import pl.app.exchange.ExchangeNominal;
 import pl.app.exchange.ExchangeCommand;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.client.RestTemplate;
+import pl.app.security.UserAuthService;
 
 import javax.transaction.Transactional;
 import java.util.*;
@@ -22,39 +25,44 @@ import java.util.*;
 public class UserServiceFacade {
 
     private UserService userService;
-    private RestTemplate restTemplate;
+    private UserAuthService userAuthService;
     private UserValidator userValidator;
+    private ExchangeMoneyValidator exchangeMoneyValidator;
     private PasswordEncoder passwordEncoder;
-    private List<ExchangeMoneyServiceStrategy> exchangeMoneyServiceStrategies;
+    private List<ExchangeServiceStrategy> exchangeMoneyServiceStrategies;
 
-    public BankAccount exchengeMoney(ExchangeCommand exchangeCommand) {
+    public void exchangeLoggedUserMoney(ExchangeCommand exchangeCommand, BindingResult result, Model model) {
 
-        AppUser user = userService.getUser()
-                .orElseThrow(() -> new RuntimeException("nie zalogoway"));
+        AppUser loggedUser = userAuthService.getUser()
+                .orElseThrow(() -> new RuntimeException("Nie znaleziono użytkownika"));
 
+        AppUser user = userService.findByPesel(loggedUser.getPesel()).orElseThrow(() -> new RuntimeException("Nie znaleziono użytkownika"));
         BankAccount accountBalance = user.getAccountBalance();
         Map<ExchangeNominal, Double> moneyResourceMap = accountBalance.getMoneyResourceMap();
-        ExchangeMoneyValidator.validate(moneyResourceMap, exchangeCommand);
-        exchangeMoneyServiceStrategies.stream()
-                .filter(strategy -> strategy.accept(exchangeCommand))
-                .findAny()
-                .orElseThrow(() -> new RuntimeException("nie ma takiej stargi"))
-                .exchange(accountBalance, exchangeCommand);
-        return accountBalance;
+        Optional<BindingResult> validation = exchangeMoneyValidator.validate(moneyResourceMap, exchangeCommand, result, model);
+        if (validation.isEmpty()) {
+            exchangeMoneyServiceStrategies.stream()
+                    .filter(strategy -> strategy.accept(exchangeCommand))
+                    .findAny()
+                    .orElseThrow(() -> new RuntimeException("Niedozwolona akcja wymiamy waluty"))
+                    .exchange(accountBalance, exchangeCommand);
+        }
     }
 
-    public Optional<AppUser> saveUser(AppUser user, Model theModel, BindingResult result, Locale locale) {
+    public Optional<AppUser> saveUser(AppUserDto userDto, Model model, BindingResult result) {
 
-        userValidator.customValidateAddUser(user, theModel, result, locale);
-        encodePassword(user);
-        return result.hasErrors()
-                ? Optional.empty()
-                : Optional.of(userService.saveUser(user));
+        Optional<BindingResult> validation = userValidator.validate(userDto, model, result);
+        if (validation.isEmpty()) {
+            encodePassword(userDto);
+            AppUser appUser = UserTransformer.toDomain(userDto);
+            return Optional.of(userService.saveUser(appUser));
+        }
+        return Optional.empty();
     }
 
-    private void encodePassword(AppUser user) {
-        if (Objects.nonNull(user.getPassword())) {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
+    private void encodePassword(AppUserDto userDto) {
+        if (Objects.nonNull(userDto.getPassword())) {
+            userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
         }
     }
 }

@@ -2,7 +2,7 @@ package pl.app.exchange;
 
 import pl.app.entity.BankAccount;
 
-public interface ExchangeMoneyServiceStrategy {
+public interface ExchangeServiceStrategy {
 
      boolean accept(ExchangeCommand exchangeCommand);
 

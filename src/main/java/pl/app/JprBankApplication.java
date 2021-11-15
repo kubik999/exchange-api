@@ -40,7 +40,6 @@ public class JprBankApplication extends SpringBootServletInitializer {
 		return new BCryptPasswordEncoder();
 	}
 
-
 	public static void main(String[] args) {
 		SpringApplication.run(JprBankApplication.class, args);
 	}

@@ -5,6 +5,11 @@
 .errorText{
     color: red;
 }
+
 .okBorder{
     border: 2px green solid!important;
+}
+
+.inline{
+    display: flex!important;
 }

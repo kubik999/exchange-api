@@ -8,8 +8,6 @@ import java.util.Optional;
 
 public interface UserService {
 
-    Optional<AppUser> getUser();
-
     AppUser saveUser(AppUser user);
 
     Optional<AppUser> findByName(String name);
@@ -17,4 +15,6 @@ public interface UserService {
     Optional<AppUser> findByPesel(String pesel);
 
     List<AppUser> findAll();
+
+    void deleteAll();
 }

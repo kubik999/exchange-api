@@ -48,17 +48,6 @@ public class AppUser implements UserDetails {
     }
 
     @Override
-    public String toString() {
-        return "Team [" +
-                "id= " + id +
-                ", name= " + name +
-                ", surname= " + lastName +
-                ", email= " + pesel +
-                ", phone= " + accountBalance +
-                "]";
-    }
-
-    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;
     }

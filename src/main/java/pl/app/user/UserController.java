@@ -10,11 +10,13 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import pl.app.exchange.ExchangeUsdService;
+import pl.app.exchange.NbpUsdV1;
+import pl.app.security.UserAuthService;
 import pl.app.util.AppConstant;
 
 import javax.validation.Valid;
 import java.security.Principal;
-import java.util.Locale;
 import java.util.Optional;
 
 @Controller
@@ -25,18 +27,26 @@ public class UserController {
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
     }
+
     private UserService userService;
+    private UserAuthService userAuthService;
     private UserServiceFacade userServiceFacade;
+    private ExchangeUsdService exchangeUsdService;
 
     @GetMapping("/register")
     public String showForm(Model model) {
-        model.addAttribute("appUser", new AppUser());
+        model.addAttribute("appUserDto", new AppUserDto());
         return AppConstant.Template.REGISTER_PAGE;
     }
 
     @PostMapping("/save")
-    public String addUser(@ModelAttribute @Valid AppUser user, BindingResult result, Model model, Locale locale) {
-        Optional<AppUser> appUser = userServiceFacade.saveUser(user, model, result, locale);
+    public String addUser(@ModelAttribute @Valid AppUserDto userDto, BindingResult result, Model model) {
+        Optional<AppUser> appUser = Optional.empty();
+        try {
+            appUser = userServiceFacade.saveUser(userDto, model, result);
+        } catch (Exception e) {
+            model.addAttribute("appException", e.getMessage());
+        }
         return appUser.isEmpty()
                 ? AppConstant.Template.REGISTER_PAGE
                 : AppConstant.Template.SUCCESSFUL_REGISTERED_PAGE;
@@ -44,16 +54,50 @@ public class UserController {
 
     @GetMapping("/jpr-bank-app")
     public String showJprBankApp(Principal principal, Model model) {
-        model.addAttribute("name", principal.getName());
-        model.addAttribute("accountBalance", userService.findByName(principal.getName()).get().getAccountBalance());
-        model.addAttribute("exchange", new ExchangeCommand());
+        prepareModelForJprBankPage(model);
         return AppConstant.Template.JPR_BANK_PAGE;
     }
 
     @PostMapping("/jpr-bank-app/exchange")
-    public String exchangePln(@ModelAttribute("exchange") ExchangeCommand exchange, BindingResult result, Model theModel, Locale locale) {
-        BankAccount bankAccount = userServiceFacade.exchengeMoney(exchange);
-        theModel.addAttribute("accountBalance", bankAccount);
+    public String exchangePln(@ModelAttribute("exchange") @Valid ExchangeCommand exchange, BindingResult result, Model model) {
+        try {
+            userServiceFacade.exchangeLoggedUserMoney(exchange, result, model);
+        } catch (Exception e) {
+            model.addAttribute("appException", e.getMessage());
+        } finally {
+            prepareModelForJprBankPage(model);
+        }
         return AppConstant.Template.JPR_BANK_PAGE;
+    }
+
+    private void prepareModelForJprBankPage(Model model) {
+
+
+        Optional<AppUser> appUser = userAuthService.getUser();
+        String name = appUser.isPresent()
+                ? appUser.get().getName()
+                : "";
+        model.addAttribute("name", name);
+        Optional<AppUser> user = userService.findByName(name);
+        BankAccount accountBalance = user.isPresent()
+                ? user.get().getAccountBalance()
+                : new BankAccount();
+        model.addAttribute("accountBalance", accountBalance);
+        model.addAttribute("exchange", new ExchangeCommand());
+        model.addAttribute("actualDolarRate", new ExchangeCommand());
+
+
+        Double ask = exchangeUsdService.getUsdRate().getRates().stream()
+                .findFirst()
+                .map(obj -> (Double) obj.get("ask"))
+                .orElseThrow(() -> new RuntimeException("Nie znaleziono ceny dolara"));
+
+        Double bid = exchangeUsdService.getUsdRate().getRates().stream()
+                .findFirst()
+                .map(obj -> (Double) obj.get("bid"))
+                .orElseThrow(() -> new RuntimeException("Nie znaleziono ceny dolara"));
+
+        model.addAttribute("ask", ask);
+        model.addAttribute("bid", bid);
     }
 }

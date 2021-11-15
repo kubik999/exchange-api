@@ -18,15 +18,15 @@
 
 
 <div class="container">
-    <h3 th:text="${name}"></h3>
-    <h3>Twoje konto </h3>
     <hr>
+    <h3>Twoje konto: <h5 th:text="${name}"></h5> </h3>
+    <br/>
     <br/>
     <h4>PLN: <span th:text="${accountBalance.actualPln}"/></h4>
     <br/>
-    <br/>
     <h4> USD: <span th:text="${accountBalance.actualUsd}"/></h4>
     <br/>
+    <h5>Aktualna cena dolara skup/sprzedaż: <span th:text="${ask}"/>/<span th:text="${bid}"/></h5>
     <br/>
 
     <form action="#" th:action="@{/jpr-bank-app/exchange}"
@@ -34,11 +34,9 @@
 
         <h4><u>Wymień walute</u></h4>
         <br/>
-
-        <strong><label id="errroLabelInputName" class="errorText" th:if="${#fields.hasErrors('value')}"
-                       th:errors="*{value}">Name Error</label></strong>
-
         <label><u>Kwota</u></label>
+        <strong><label id="moneyAmountExceeded" th:text="${moneyAmountExceeded}" class="errorText"/></label></strong>
+        <strong><label id="notPositiveValue" th:text="${notPositiveValue}" class="errorText"/></label></strong>
         <input id="inputName" type="text" th:field="*{value}"
                th:classappend="${#fields.hasErrors('value')} ? errorBorder"
                class="form-control mb-4 col-4" placeholder="Wpisz imię...">
@@ -57,6 +55,7 @@
 
         <button id="btnTeamSave" type="submit" class="btn btn-info col-2">Wymień</button>
     </form>
+    <strong><label id="appException" th:text="${appException}" class="errorText"/></label></strong>
 </div>
 </body>
 </html>
