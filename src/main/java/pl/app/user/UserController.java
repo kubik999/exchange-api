@@ -54,24 +54,20 @@ public class UserController {
 
     @GetMapping("/jpr-bank-app")
     public String showJprBankApp(Principal principal, Model model) {
-        prepareModelForJprBankPage(model);
-        return AppConstant.Template.JPR_BANK_PAGE;
+        return constructResponse(model);
     }
 
     @PostMapping("/jpr-bank-app/exchange")
-    public String exchangePln(@ModelAttribute("exchange") @Valid ExchangeCommand exchange, BindingResult result, Model model) {
+    public String exchangeMoney(@ModelAttribute("exchange") @Valid ExchangeCommand exchange, BindingResult result, Model model) {
         try {
             userServiceFacade.exchangeLoggedUserMoney(exchange, result, model);
         } catch (Exception e) {
             model.addAttribute("appException", e.getMessage());
-        } finally {
-            prepareModelForJprBankPage(model);
         }
-        return AppConstant.Template.JPR_BANK_PAGE;
+        return constructResponse(model);
     }
 
-    private void prepareModelForJprBankPage(Model model) {
-
+    private String constructResponse(Model model) {
         Optional<AppUser> appUser = userAuthService.getLoggedUser();
         String name = appUser.isPresent()
                 ? appUser.get().getName()
@@ -83,12 +79,13 @@ public class UserController {
                 : new BankAccount();
         model.addAttribute("accountBalance", accountBalance);
         model.addAttribute("exchange", new ExchangeCommand());
-        model.addAttribute("actualDolarRate", new ExchangeCommand());
+        //model.addAttribute("actualDolarRate", new ExchangeCommand());
 
         Optional<NbpUsdV1> nbpUsdV1 = exchangeUsdService.getUsdRate();
         double ask = nbpUsdV1.map(NbpUsdV1::getAsk).orElse(0.0);
         double bid = nbpUsdV1.map(NbpUsdV1::getBid).orElse(0.0);
         model.addAttribute("ask", ask);
         model.addAttribute("bid", bid);
+        return  AppConstant.Template.JPR_BANK_PAGE;
     }
 }

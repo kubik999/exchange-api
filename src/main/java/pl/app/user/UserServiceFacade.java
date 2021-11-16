@@ -1,6 +1,7 @@
 package pl.app.user;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.app.entity.AppUser;
 import pl.app.entity.BankAccount;
@@ -16,6 +17,7 @@ import pl.app.security.UserAuthService;
 import javax.transaction.Transactional;
 import java.util.*;
 
+@Slf4j
 @Service
 @Transactional
 @AllArgsConstructor
@@ -43,6 +45,7 @@ public class UserServiceFacade {
                     .findAny()
                     .orElseThrow(() -> new RuntimeException("Niedozwolona akcja wymiamy waluty"))
                     .exchange(accountBalance, exchangeCommand);
+            log.info("User with id {} exchanged {}", String.valueOf(user.getId()), String.valueOf(exchangeCommand.getValue()));
         }
     }
 
@@ -51,8 +54,9 @@ public class UserServiceFacade {
         Optional<BindingResult> validation = userValidator.validate(userDto, model, result);
         if (validation.isEmpty()) {
             encodePassword(userDto);
-            AppUser appUser = UserTransformer.toDomain(userDto);
-            return Optional.of(userService.saveUser(appUser));
+            AppUser appUser = userService.saveUser(UserTransformer.toDomain(userDto));
+            log.info("User with pesel {} was registered", appUser.getPesel());
+            return Optional.of(appUser);
         }
         return Optional.empty();
     }
