@@ -27,7 +27,7 @@ public class ExchangeUsdServiceImpl implements ExchangeUsdService {
         NbpUsdV1 nbpUsdV1 = null;
         try {
             var response = restTemplate.getForObject(URL, LinkedHashMap.class);
-            ObjectMapper mapper = new ObjectMapper();
+            ObjectMapper mapper = new ObjectMapper(); //to jako bean + konfiguracja
             nbpUsdV1 = mapper.convertValue(response, NbpUsdV1.class);
         } catch (Exception e) {
             log.info("Error while getting data from API {}", URL);
