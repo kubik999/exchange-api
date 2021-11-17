@@ -19,7 +19,7 @@
 
 <div class="container">
     <hr>
-    <h3>Twoje konto: <h5 th:text="${name}"></h5> </h3>
+    <h3>Twoje konto: <h5 th:text="${appUser.name}"></h5><h5 th:text="${appUser.lastName}"></h5><h5 th:text="${appUser.pesel}"></h5> </h3>
     <br/>
     <br/>
     <h4>PLN: <span th:text="${accountBalance.actualPln}"/></h4>

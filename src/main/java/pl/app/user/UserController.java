@@ -17,6 +17,7 @@ import pl.app.util.AppConstant;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.Objects;
 import java.util.Optional;
 
 @Controller
@@ -68,12 +69,12 @@ public class UserController {
     }
 
     private String constructResponse(Model model) {
-        Optional<AppUser> appUser = userAuthService.getLoggedUser();
-        String name = appUser.isPresent()
-                ? appUser.get().getName()
-                : "";
-        model.addAttribute("name", name);
-        Optional<AppUser> user = userService.findByName(name);
+        AppUser appUser = userAuthService.getLoggedUser().orElseGet(AppUser::new);
+//        String name = appUser.isPresent()
+//                ? appUser.get().getName()
+//                : "";
+        model.addAttribute("appUser", appUser);
+        Optional<AppUser> user = userService.findByName(Objects.nonNull(appUser.getName()) ? appUser.getName() : "");
         BankAccount accountBalance = user.isPresent()
                 ? user.get().getAccountBalance()
                 : new BankAccount();
