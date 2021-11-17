@@ -1,5 +1,6 @@
 package pl.app.user;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import pl.app.entity.AppUser;
 import pl.app.util.AppConstant;
@@ -17,7 +18,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Component
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
 class UserValidator extends ValidationUtils {
 
     private UserService userService;

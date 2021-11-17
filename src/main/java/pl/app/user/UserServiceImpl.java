@@ -1,5 +1,6 @@
 package pl.app.user;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import pl.app.entity.AppUser;
 import org.springframework.stereotype.Service;
@@ -8,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
 class UserServiceImpl implements UserService {
 
     private UserRepository repo;

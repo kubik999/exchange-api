@@ -1,5 +1,6 @@
 package pl.app.exchange;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import pl.app.entity.BankAccount;
 import org.springframework.stereotype.Service;
@@ -11,7 +12,7 @@ import java.util.Optional;
 
 @Service
 @Transactional
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
 class ExchangeServicePlnToUsdStrategyImpl implements ExchangeServiceStrategy {
 
     private ExchangeUsdService exchangeUsdService;

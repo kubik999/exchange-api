@@ -79,7 +79,6 @@ public class UserController {
                 : new BankAccount();
         model.addAttribute("accountBalance", accountBalance);
         model.addAttribute("exchange", new ExchangeCommand());
-        //model.addAttribute("actualDolarRate", new ExchangeCommand());
 
         Optional<NbpUsdV1> nbpUsdV1 = exchangeUsdService.getUsdRate();
         double ask = nbpUsdV1.map(NbpUsdV1::getAsk).orElse(0.0);
