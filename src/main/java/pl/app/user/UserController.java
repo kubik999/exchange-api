@@ -5,6 +5,7 @@ import pl.app.entity.BankAccount;
 import pl.app.exchange.ExchangeCommand;
 import pl.app.entity.AppUser;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -33,6 +34,14 @@ public class UserController {
     private UserAuthService userAuthService;
     private UserServiceFacade userServiceFacade;
     private ExchangeUsdService exchangeUsdService;
+    private GreetingMailService greetingMailService;
+
+    @PostMapping("/api/mail/greetings")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void sendGreetings(@RequestBody @Valid GreetingMailRequest request) {
+        greetingMailService.sendTo(request.getEmail());
+    }
 
     @GetMapping("/register")
     public String showForm(Model model) {
