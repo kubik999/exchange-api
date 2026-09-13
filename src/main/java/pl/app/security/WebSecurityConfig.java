@@ -25,7 +25,6 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.headers().disable();
 		http.authorizeRequests()
 				.antMatchers("/jpr-bank-app/**").authenticated()
-				.antMatchers("/api/mail/**").authenticated()
 				.and()
 				.formLogin().defaultSuccessUrl("/jpr-bank-app");
 	}
